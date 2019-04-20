@@ -13,6 +13,14 @@ create table `error_code_info` (
 alter table `error_code_info` add unique (`error_kind`);
 alter table `error_code_info` add index (`error_kind`);
 
+#注册码
+create table `reg_code` (
+	`code_id` int unsigned not null auto_increment primary key,
+	`code` varchar(8)
+)engine=InnoDB default charset=utf8;
+alter table `reg_code` add unique (`code_id`);
+alter table `reg_code` add index (`code_id`);
+
 #扭蛋类型表
 create table `egge_data` (
 	`egge_kind` int unsigned not null auto_increment primary key,
