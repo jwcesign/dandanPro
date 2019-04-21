@@ -12,6 +12,8 @@
 	    if ($conn->connect_error) {
 		    die("连接失败: " . $conn->connect_error);
 		} else {
+			$conn->select_db("inventory_management");
+			$conn->set_charset('utf8');
 			return $conn;
 		}
 	}

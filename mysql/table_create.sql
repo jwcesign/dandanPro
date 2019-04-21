@@ -71,5 +71,7 @@ alter table `egg_machine` add index (`egg_machine_id`);
 create table `users` (
 	`user_id` int unsigned not null auto_increment primary key,
 	`user_name` varchar(30),
-	`passwd` varchar(30),
+	`passwd` varchar(30)
 )engine=InnoDB default charset=utf8;
+#插入一条数据，默认密码和用户
+insert into users (user_name, passwd) values ("姜伟", "12345678");
