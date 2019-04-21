@@ -12,9 +12,18 @@
 
 		<title>库存管理系统</title>
 	</header>
+	<!-- 数据库操作php -->
+	<?
+		include_once '/mysql.php';
+		$conn=connectMysql();
+		echo "连接成功";
+	?>
 	<!-- 登陆页面，如果不存在cookie或者cookie不正确 -->
 	<?
-		echo phpinfo();
+	?>
+
+	<!-- 导航页面 -->
+	<?
 	?>
 <body>
 </body>
