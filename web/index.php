@@ -12,6 +12,10 @@
 
 		<title>库存管理系统</title>
 	</header>
+	<!-- 登陆页面，如果不存在cookie或者cookie不正确 -->
+	<?
+		echo phpinfo();
+	?>
 <body>
 </body>
 </html>
