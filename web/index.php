@@ -16,14 +16,19 @@
 	<?
 		include_once './mysql.php';
 		$conn=connectMysql();
-		echo "连接成功";
 	?>
 	<!-- 登陆页面，如果不存在cookie或者cookie不正确 -->
 	<?
+		include_once "./login/main.php";
 	?>
 
 	<!-- 导航页面 -->
 	<?
+	?>
+
+	<!-- 关闭mysql -->
+	<?
+		closeMysqlConnect($conn);
 	?>
 <body>
 </body>
