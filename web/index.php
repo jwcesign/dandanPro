@@ -14,7 +14,7 @@
 	</header>
 	<!-- 数据库操作php -->
 	<?
-		include_once '/mysql.php';
+		include_once './mysql.php';
 		$conn=connectMysql();
 		echo "连接成功";
 	?>
