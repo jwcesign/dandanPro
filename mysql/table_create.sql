@@ -30,12 +30,23 @@ alter table `egge_data` add unique (`egge_kind`);
 alter table `egge_data` add index (`egge_kind`);
 
 #商场表
-create table `shop` (
-	`shop_id` int unsigned not null auto_increment primary key,
-	`shop_province` varchar(30),
-	`shop_city` varchar(30),
+create table `store` (
+	`store_id` int unsigned not null auto_increment primary key,
+	`store_province` varchar(30),
+	`store_city` varchar(30),
+	`store_county` varchar(30),
 	`shop_name` varchar(30),
 	`shop_des` varchar(300)
+)engine=InnoDB default charset=utf8;
+alter table `store` add unique (`store_id`);
+alter table `store` add index (`store_id`);
+
+#店铺表
+create table `shop` (
+	`shop_id` int unsigned not null auto_increment primary key,
+	`store_id` int unsigned not null,
+	`store_place` varchar(50),
+	foreign key(shop_id) references store(store_id)
 )engine=InnoDB default charset=utf8;
 alter table `shop` add unique (`shop_id`);
 alter table `shop` add index (`shop_id`);
@@ -56,13 +67,15 @@ alter table `coin_machine` add index (`machine_id`);
 create table `egg_machine` (
 	`egg_machine_id` int unsigned not null auto_increment primary key,
 	`machine_id` int unsigned not null,
+	`shop_id` int unsigned not null,
 	`egges_num` int unsigned,
 	`egge_kind` int unsigned,
 	`error_kind` int unsigned,
 	`err_time` date,
 	foreign key(machine_id) references coin_machine(machine_id),
 	foreign key(error_kind) references error_code_info(error_kind),
-	foreign key(egge_kind) references egge_data(egge_kind)
+	foreign key(egge_kind) references egge_data(egge_kind),
+	foreign key(shop_id) references shop(shop_id)
 )engine=InnoDB default charset=utf8;
 alter table `egg_machine` add unique (`egg_machine_id`);
 alter table `egg_machine` add index (`egg_machine_id`);
@@ -74,4 +87,4 @@ create table `users` (
 	`passwd` varchar(30)
 )engine=InnoDB default charset=utf8;
 #插入一条数据，默认密码和用户
-insert into users (user_name, passwd) values ("姜伟", "12345678");
+insert into users (user_name, passwd) values ("jw", "12345678");

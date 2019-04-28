@@ -8,9 +8,9 @@
 	function connectMysql()
 	{
 		global $user, $passwd, $servername;
-	    $conn=new mysqli($servername, $user, $passwd);
-	    if ($conn->connect_error) {
-		    die("连接失败: " . $conn->connect_error);
+		$conn=new mysqli($servername, $user, $passwd);
+		if ($conn->connect_error) {
+			die("连接失败: " . $conn->connect_error);
 		} else {
 			$conn->select_db("inventory_management");
 			$conn->set_charset('utf8');
