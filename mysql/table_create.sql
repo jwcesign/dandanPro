@@ -3696,11 +3696,15 @@ insert into country  values ('3282', '铁门关市', '659006000000', '6590000000
 
 #错误信息表
 create table `error_code_info` (
-	`error_kind` int unsigned not null auto_increment primary key,
+	`error_kind` int not null primary key,
 	`error_des` varchar(50)
 )engine=InnoDB default charset=utf8;
 alter table `error_code_info` add unique (`error_kind`);
 alter table `error_code_info` add index (`error_kind`);
+insert into error_code_info values('0', "正常");
+insert into error_code_info values('-1', "正常投币且库存>0但未出蛋");
+insert into error_code_info values('-2', "出蛋口异物堵塞");
+insert into error_code_info values('-3', "进蛋口异物堵塞");
 
 #注册码
 create table `reg_code` (
@@ -3710,13 +3714,32 @@ create table `reg_code` (
 alter table `reg_code` add unique (`code_id`);
 alter table `reg_code` add index (`code_id`);
 
-#扭蛋类型表
-create table `egge_data` (
-	`egge_kind` int unsigned not null auto_increment primary key,
-	`egge_des` varchar(50)
+#海报表
+create table `poster` (
+	`poster_id` int unsigned not null auto_increment primary key,
+	`poster_kind` varchar(30),
+	`poster_name` varchar(30),
+	`target_population` varchar(30),
+	`cost_coin` int,
+	`size` varchar(30),
+	`img_name` varchar(30)
 )engine=InnoDB default charset=utf8;
-alter table `egge_data` add unique (`egge_kind`);
-alter table `egge_data` add index (`egge_kind`);
+insert into poster values ('1', '超级英雄', '迎接超级英雄', '大学生', '5', '50x50', 'null');
+
+#商品表
+create table `product` (
+	`product_id` int unsigned not null auto_increment primary key,
+	`product_kind` varchar(30),
+	`product_name` varchar(30),
+	`belong_poster_id` int unsigned,
+	`cost` int,
+	`img_name` varchar(30),
+	`size` varchar(30),
+	`avg_earn` int,
+	`comment` varchar(30),
+	foreign key(belong_poster_id) references poster(poster_id)
+)engine=InnoDB default charset=utf8;
+insert into product values ('1', '蝙蝠侠系列', '蝙蝠侠', '1', '3', 'null', '40x40', '0', 'null');
 
 #商场表
 create table `store` (
@@ -3734,12 +3757,19 @@ insert into store values('1', '110000000000', '110100000000', '110101000000', '�
 #店铺表
 create table `shop` (
 	`shop_id` int unsigned not null auto_increment primary key,
+	`shop_name` varchar(40),
+	`shop_place` varchar(50),
+	`receive_place` varchar(50),
+	`box_num` int,
+	`connecter` varchar(30),
+	`phone` varchar(15),
 	`store_id` int unsigned not null,
-	`store_place` varchar(50),
+	`alive` boolean,
 	foreign key(store_id) references store(store_id)
 )engine=InnoDB default charset=utf8;
 alter table `shop` add unique (`shop_id`);
 alter table `shop` add index (`shop_id`);
+insert into shop values('1', '乐乐玩具城', '3楼255号门店', '物流管理中心', '0', '小红', '15968174205', '1', '1');
 
 #兑币机表
 create table `coin_machine` (
@@ -3747,28 +3777,31 @@ create table `coin_machine` (
 	`shop_id` int unsigned not null,
 	`accurate_position` varchar(50),
 	`coin_num` int unsigned not NULL,
-	`key_state` int,
+	`key_state` boolean, #0插入钥匙，1取出钥匙
+	`alive` boolean,
 	foreign key(shop_id) references shop(shop_id)
 )engine=InnoDB default charset=utf8;
 alter table `coin_machine` add unique (`machine_id`);
 alter table `coin_machine` add index (`machine_id`);
+insert into coin_machine values('1', '1', '右排第3个', '0', 'true', '1');
 
 #扭蛋机表
 create table `egg_machine` (
 	`egg_machine_id` int unsigned not null auto_increment primary key,
-	`machine_id` int unsigned not null,
 	`shop_id` int unsigned not null,
-	`egges_num` int unsigned,
-	`egge_kind` int unsigned,
-	`error_kind` int unsigned,
-	`err_time` date,
-	foreign key(machine_id) references coin_machine(machine_id),
+	`eggs_num` int unsigned,
+	`egg_kind` int unsigned,
+	`error_kind` int,
+	`err_time` varchar(30),
+	`inventory_state` int, #充足：0,无：-1,少于15：-2
+	`alive` boolean,
 	foreign key(error_kind) references error_code_info(error_kind),
-	foreign key(egge_kind) references egge_data(egge_kind),
+	foreign key(egg_kind) references product(product_id),
 	foreign key(shop_id) references shop(shop_id)
 )engine=InnoDB default charset=utf8;
 alter table `egg_machine` add unique (`egg_machine_id`);
 alter table `egg_machine` add index (`egg_machine_id`);
+insert into egg_machine values ('1', '1', '0', '1', '0', 'null', '-1', '1');
 
 #用户和密码
 create table `users` (
@@ -3778,3 +3811,48 @@ create table `users` (
 )engine=InnoDB default charset=utf8;
 #插入一条数据，默认密码和用户
 insert into users (user_name, passwd) values ("jw", "12345678");
+
+#兑币机消费记录表
+create table `coin_machine_ac` (
+	`ac_id` int unsigned not null auto_increment primary key,
+	`machine_id` int unsigned,
+	`ac_kind` int, #2代表出币，3代表进币
+	`coin_num` int unsigned,
+	`date` varchar(30),
+	foreign key(machine_id) references coin_machine(machine_id)
+)engine=InnoDB default charset=utf8;
+
+#兑币机钥匙状态
+create table `coin_machine_key_ac` (
+	`ac_id` int unsigned not null auto_increment primary key,
+	`machine_id` int unsigned,
+	`ac_kind` int,
+	`date` varchar(30),
+	foreign key(machine_id) references coin_machine(machine_id)
+)engine=InnoDB default charset=utf8;
+
+#扭蛋机操进出蛋操表
+create table `egg_ac` (
+	`ac_id` int unsigned not null auto_increment primary key,
+	`egg_machine_id` int unsigned,
+	`ac_kind` int, #4代表进，3代表出
+	`egg_ac_num` int,
+	`date` varchar(30),
+	foreign key(egg_machine_id) references egg_machine(egg_machine_id)
+)engine=InnoDB default charset=utf8;
+
+#扭蛋机投币操作
+create table `egg_coin_ac` (
+	`ac_id` int unsigned not null auto_increment primary key,
+	`egg_machine_id` int unsigned,
+	`ac_kind` int, #正常投币：0, 超时未投足额：-1, 补投：-2
+	`coin_num` int,
+	`date` varchar(30),
+	foreign key(egg_machine_id) references egg_machine(egg_machine_id)
+)engine=InnoDB default charset=utf8;
+
+
+select * from store;
+select * from shop;
+select * from coin_machine;
+select * from egg_machine;

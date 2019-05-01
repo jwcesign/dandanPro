@@ -3,11 +3,11 @@
 
 #状态码
 class ReturnCode():
-    OK = 0
-    NO_RELATED_DATA = -1
-    OPERATION_ERR = -2
-    ERR_USER = -3
-    DATA_ERR = -4
+	OK = 0
+	NO_RELATED_DATA = -1
+	OPERATION_ERR = -2
+	ERR_USER = -3
+	DATA_ERR = -4
 
 #操作类型
 class OperationKind():
@@ -16,7 +16,7 @@ class OperationKind():
 	INVENTORY = 2
 	OUT_EGG = 3
 	IN_EGG = 4
-	COIN_BOX = 5
+	COIN_MACHINE = 5
 
 #操作状态码
 #投币

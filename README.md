@@ -3,4 +3,6 @@
 
 ### 工作进度
 * docker img安装---done
-* 数据库创建脚本---doing
+* 数据库创建脚本---done
+* 商场增删操作---done
+* 店铺增删数据---doing

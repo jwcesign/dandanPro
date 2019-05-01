@@ -3,9 +3,9 @@
 
 class Config:
 	def __init__(self,port,
-		         ip, thread_num,
-		         mysql_user, mysql_passwd,
-		         database):
+				 ip, thread_num,
+				 mysql_user, mysql_passwd,
+				 database):
 		self.conn_port = port
 		self.conn_ip = ip
 		self.sql_user = mysql_user
